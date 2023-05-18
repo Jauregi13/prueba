@@ -1,0 +1,15 @@
+workflows:
+  version: 2
+  build-and-deploy:
+    environment:
+      flutter: latest
+    scripts:
+      - name: Install dependencies
+        script: npm ci
+      - name: Build iOS app
+        script: |
+          npm run build
+          npx cap sync ios
+          xcodebuild -workspace ios/App.xcworkspace -scheme App -configuration Debug CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+    artifacts:
+      - ios/build/Products/Debug-iphonesimulator/App.app.zip
